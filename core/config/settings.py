@@ -1,10 +1,7 @@
-
-
 from pathlib import Path
 from os import path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 
 SECRET_KEY = "django-insecure-xm&wc39ajw8q9a(q_i*+!p$ic$-6e3zo0aq2aci7#rdx3(97()"
@@ -28,6 +25,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "django_cleanup.apps.CleanupConfig",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -111,5 +109,17 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # DRF
 REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"]
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Flavor Haven Restaurant",
+    "DESCRIPTION": "",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
