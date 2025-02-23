@@ -1,0 +1,41 @@
+
+services:
+  
+  web:
+    container_name: web
+    image: web
+    build: 
+       context: .
+       dockerfile: ./docker/local/Dockerfile
+
+    restart: always
+    volumes:
+      - ./core:/app
+      - static_volume:/app/static
+      - media_volume:/app/media
+    command: /start.sh  
+
+    env_file:
+      - ./envs/local/web.env
+      - ./envs/local/postgres.env
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      - "db"
+
+  db:
+    container_name: db
+    image : postgres
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+    env_file:
+      - envs/local/postgres.env
+
+
+
+volumes:
+  static_volume:
+  media_volume:
+  local_postgres_data:
