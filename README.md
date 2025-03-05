@@ -66,3 +66,8 @@ make l-down
 ```
 
 
+## Database Schema Diagram
+
+The database schema diagram is available at the following link:
+
+[Database Schema (draw.io)](https://drive.google.com/file/d/1tckU4alTGrlECxeaksk15KEk69UviUN8/view?usp=sharing)
