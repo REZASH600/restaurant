@@ -15,24 +15,24 @@ print_error() {
     echo -e "\e[31m$1\e[0m"  # 31 is the code for red text
 }
 
-# Function to create a superuser
-# create_superuser() {
-#     if [ ! -z "$DJANGO_SUPERUSER_PHONE" ] && [ ! -z "$DJANGO_SUPERUSER_EMAIL" ] && [ ! -z "$DJANGO_SUPERUSER_PASSWORD" ]; then
-#         echo "Creating superuser..."
+Function to create a manager
+create_superuser() {
+    if [ ! -z "$DJANGO_SUPERUSER_PHONE" ] && [ ! -z "$DJANGO_SUPERUSER_USERNAME" ] && [ ! -z "$DJANGO_SUPERUSER_PASSWORD" ]; then
+        echo "Creating manager..."
         
-#         # Create the superuser
-#         python manage.py createsuperuser --noinput --phone "$DJANGO_SUPERUSER_PHONE" --username "${DJANGO_SUPERUSER_EMAIL}" &>/dev/null
+        # Create the superuser
+        python manage.py createsuperuser --noinput --phone "$DJANGO_SUPERUSER_PHONE" --username "${DJANGO_SUPERUSER_USERNAME}" &>/dev/null
 
-#         # Check if superuser creation was successful
-#         if [ $? -eq 0 ]; then
-#             print_success "Superuser created successfully."
-#         else
-#             print_error "Superuser creation failed. It may already exist."
-#         fi
-#     else
-#         print_warning "Superuser creation skipped. Please set DJANGO_SUPERUSER_EMAIL, DJANGO_SUPERUSER_PHONE, and DJANGO_SUPERUSER_PASSWORD environment variables."
-#     fi
-# }
+        # Check if superuser creation was successful
+        if [ $? -eq 0 ]; then
+            print_success "Manager created successfully."
+        else
+            print_error "Manager creation failed. It may already exist."
+        fi
+    else
+        print_warning "Manager creation skipped. Please set DJANGO_SUPERUSER_USERNAME, DJANGO_SUPERUSER_PHONE, and DJANGO_SUPERUSER_PASSWORD environment variables."
+    fi
+}
 
 # Run migrations
 echo "Making migrations..."
