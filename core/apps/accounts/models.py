@@ -17,6 +17,7 @@ class MyUserManager(BaseUserManager):
         """
         Creates and returns a regular user with the specified phone, username, and password.
 
+
         This method ensures that the phone number, username, and password are provided.
         It also validates the password and normalizes the email if included in extra fields.
 
@@ -48,6 +49,7 @@ class MyUserManager(BaseUserManager):
 
         user.set_password(password)
         user.save(using=self._db)
+
         return user
 
     def create_personnel(self, phone, username, password, **extra_fields):
@@ -155,3 +157,36 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = _("User")
         verbose_name_plural = _("Users")
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(
+        MyUser,
+        verbose_name=_("user"),
+        on_delete=models.CASCADE,
+        related_name=_("profile"),
+    )
+    first_name = models.CharField(
+        verbose_name=_("first name"), max_length=255, blank=True, null=True
+    )
+    last_name = models.CharField(
+        verbose_name=_("last name"), max_length=255, blank=True, null=True
+    )
+    profile_picture = models.ImageField(
+        verbose_name=_("profile picture"),
+        upload_to="user/profile/",
+        default="user/profile/user.png",
+    )
+
+    reviews_count = models.IntegerField(verbose_name=_("reviews count"), default=0)
+    orders_count = models.IntegerField(verbose_name=_("orders count"), default=0)
+    temporary_email = models.EmailField(
+        verbose_name=_("temporary email"), max_length=255, blank=True, null=True
+    )
+
+    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
+
+    class Meta:
+        verbose_name = _("Profile")
+        verbose_name_plural = _("Profiles")
