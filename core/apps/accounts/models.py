@@ -187,6 +187,36 @@ class Profile(models.Model):
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.user.phone})"
+
     class Meta:
         verbose_name = _("Profile")
         verbose_name_plural = _("Profiles")
+
+
+class Checkout(models.Model):
+
+    user_profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="checkouts"
+    )
+    address = models.TextField(verbose_name=_("address"))
+    city = models.CharField(verbose_name=_("city"), max_length=100)
+    state = models.CharField(verbose_name=_("state"), max_length=100)
+    postal_code = models.CharField(
+        verbose_name=_("postal code"),
+        max_length=20,
+        validators=[validations.custom_postal_code_validator],
+    )
+    recipient_phone = models.CharField(verbose_name=_("recipient phone"), max_length=15)
+    recipient_name = models.CharField(verbose_name=_("recipient name"), max_length=100)
+    is_default = models.BooleanField(verbose_name=_("is default"), default=False)
+    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
+
+    def __str__(self):
+        return f"Checkout for {self.recipient_name} - {self.address}"
+
+    class Meta:
+        verbose_name = _("Checkout")
+        verbose_name_plural = _("Checkouts")

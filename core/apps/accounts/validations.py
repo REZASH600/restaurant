@@ -1,7 +1,7 @@
 import re
 
 from django.core.exceptions import ValidationError
-
+from django.utils.translation import gettext_lazy as _
 
 def validate_phone(value):
     """
@@ -20,4 +20,11 @@ def validate_phone(value):
 
     if value is not None:
         if not phone_regex.match(value):
-            raise ValidationError("Please enter a valid phone number.")
+            raise ValidationError(_("Please enter a valid phone number."))
+
+
+def custom_postal_code_validator(value):
+    if not value.isdigit():
+        raise ValidationError(_("Postal code must contain only numbers."))
+    if len(value) != 10:
+        raise ValidationError(_("Iranian postal code must be exactly 10 digits."))

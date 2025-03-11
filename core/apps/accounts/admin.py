@@ -85,3 +85,16 @@ class ProfileAdmin(admin.ModelAdmin):
         "first_name",
         "last_name",
     ]
+
+
+@admin.register(models.Checkout)
+class CheckoutAdmin(admin.ModelAdmin):
+    list_display = ["user_profile", "address", "is_default"]
+    list_filter = ["is_default"]
+    search_fields = [
+        "user_profile.user.phone",
+        "user_profile.user.username",
+        "recipient_phone",
+        "recipient_name",
+    ]
+    list_editable = ["is_default"]
