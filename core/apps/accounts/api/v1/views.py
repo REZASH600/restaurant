@@ -22,3 +22,9 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
     queryset = models.Profile.objects.all()
     serializer_class = serializers.ProfileSerializer
     permission_classes = (permissions.IsOwnerOrAdminUser,)
+
+
+class RegisterUserApiView(generics.CreateAPIView):
+    serializer_class = serializers.RegisterUserSerializer
+    permission_classes = (permissions.AnonusUser,)
+

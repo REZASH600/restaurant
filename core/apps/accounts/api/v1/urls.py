@@ -5,5 +5,6 @@ app_name = "api_v1"
 
 urlpatterns = [
     path("user/list/", views.UserListApiView.as_view(), name="user_list"),
-    path("user/profile/<int:pk>/",views.ProfileApiView.as_view(),name="user_profile")
-    ]
+    path("user/profile/<int:pk>/", views.ProfileApiView.as_view(), name="user_profile"),
+    path("user/register/", views.RegisterUserApiView.as_view(), name="user_register"),
+]
