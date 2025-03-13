@@ -2,6 +2,8 @@ from pathlib import Path
 from os import path
 from decouple import Csv, config
 
+from datetime import timedelta
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -132,6 +134,13 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
+
+
+# JWT
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=6),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7)
+    }
 
 
 # accounts model settings
