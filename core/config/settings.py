@@ -145,3 +145,7 @@ SIMPLE_JWT = {
 
 # accounts model settings
 AUTH_USER_MODEL = "accounts.MyUser"
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "apps.accounts.authentication.EmailOrPhoneAuthentication",
+]
