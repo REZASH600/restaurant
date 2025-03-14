@@ -2,6 +2,7 @@ from rest_framework import serializers
 from apps.accounts import models
 from django.contrib.auth.password_validation import validate_password
 
+
 class UserListSerializer(serializers.ModelSerializer):
     profile = serializers.HyperlinkedRelatedField(
         read_only=True, view_name="accounts:api_v1:user_profile"
@@ -42,7 +43,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         return False
 
 
-
 class RegisterUserSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(max_length=128)
     password2 = serializers.CharField(max_length=128)
@@ -50,28 +50,60 @@ class RegisterUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.MyUser
         fields = ["username", "phone", "password1", "password2"]
-    
+
     def validate_password1(self, value):
         validate_password(value)
         return value
 
     def validate(self, attrs):
-    
-        password1 = attrs.get('password1')
-        password2 = attrs.get('password2')
-        
+
+        password1 = attrs.get("password1")
+        password2 = attrs.get("password2")
+
         if password1 != password2:
             raise serializers.ValidationError({"password2": "Passwords do not match."})
-        
+
         return attrs
 
     def create(self, validated_data):
         validated_data.pop("password1")
-        validated_data["password"] = validated_data.pop('password2')  
+        validated_data["password"] = validated_data.pop("password2")
         user = models.MyUser.objects.create_user(**validated_data)
         return user
 
 
+class ChangePassowrdSerializer(serializers.Serializer):
+    old_password = serializers.CharField(max_length=128)
+    password1 = serializers.CharField(max_length=128)
+    password2 = serializers.CharField(max_length=128)
 
+    def validate_old_password(self, value):
+        user = self.context.get("request").user
 
-    
+        if not user.check_password(value):
+            raise serializers.ValidationError(
+                {"old_password": "The old password is incorrect."}
+            )
+
+        return value
+
+    def validate_password1(self, value):
+        validate_password(value)
+        return value
+
+    def validate(self, attrs):
+
+        password1 = attrs.get("password1")
+        password2 = attrs.get("password2")
+
+        if password1 != password2:
+            raise serializers.ValidationError({"password2": "Passwords do not match."})
+
+        return attrs
+
+    def save(self, **kwargs):
+        """Update user's password."""
+        user = self.context.get("request").user
+        user.set_password(self.validated_data["password1"])
+        user.save()
+        return user

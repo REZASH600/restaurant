@@ -4,7 +4,12 @@ from . import views
 app_name = "api_v1"
 
 urlpatterns = [
-    path("user/list/", views.UserListApiView.as_view(), name="user_list"),
-    path("user/profile/<int:pk>/", views.ProfileApiView.as_view(), name="user_profile"),
-    path("user/register/", views.RegisterUserApiView.as_view(), name="user_register"),
+    path("list/", views.UserListApiView.as_view(), name="user_list"),
+    path("profile/<int:pk>/", views.ProfileApiView.as_view(), name="user_profile"),
+    path("register/", views.RegisterUserApiView.as_view(), name="user_register"),
+    path(
+        "change-password/",
+        views.ChangePasswordApiView.as_view(),
+        name="change_password",
+    ),
 ]
