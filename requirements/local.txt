@@ -1,2 +1,4 @@
 -r base.txt
 
+django-factory_boy==1.0.0
+Faker==37.4.0
