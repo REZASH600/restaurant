@@ -107,3 +107,8 @@ class ChangePassowrdSerializer(serializers.Serializer):
         user.set_password(self.validated_data["password1"])
         user.save()
         return user
+
+
+
+class VerifyTokenApiSerializer(serializers.Serializer):
+    token = serializers.CharField(max_length=6)

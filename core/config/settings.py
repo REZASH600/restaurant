@@ -7,7 +7,6 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-
 SECRET_KEY = config("SECRET_KEY", default="django")
 
 
@@ -30,7 +29,6 @@ INSTALLED_APPS = [
     "django_filters",
     "django_cleanup.apps.CleanupConfig",
     "drf_spectacular",
-
     # apps
     "apps.accounts.apps.AccountsConfig",
 ]
@@ -139,8 +137,8 @@ SPECTACULAR_SETTINGS = {
 # JWT
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=6),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7)
-    }
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+}
 
 
 # accounts model
@@ -151,13 +149,11 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-
 # Celery
 CELERY_BROKER_URL = config(
     "CELERY_BROKER_URL", default="amqp://guest:guest@rabbitmq:5672/"
 )
 CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://redis:6379/0")
-
 
 
 # Email configuration
@@ -168,7 +164,7 @@ EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False, cast=bool)
 EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False, cast=bool)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
-
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="")
 
 
 # CaChes
@@ -178,6 +174,6 @@ CACHES = {
         "LOCATION": config("REDIS_URL", default="redis://redis:6379/1"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
     }
 }
