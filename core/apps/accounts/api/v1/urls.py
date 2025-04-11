@@ -12,6 +12,8 @@ urlpatterns = [
         views.ChangePasswordApiView.as_view(),
         name="change_password",
     ),
-    path("email/send/", views.SendEmailApiView.as_view(), name="send_email"),
-    path("email/verify/", views.VerifyEmailApiView.as_view(), name="verify_email"),
+    path("verify-email/send/", views.SendEmailApiView.as_view(), name="send_email"),
+    path("verify-email/check/", views.VerifyEmailApiView.as_view(), name="verify_email"),
+    path("verify-phone/send/", views.SendPhoneOtpApiView.as_view(), name="send_phone_otp"),
+    path("verify-phone/check/", views.VerifyPhoneOtpApiView.as_view(), name="verify_phone_otp"),
 ]
