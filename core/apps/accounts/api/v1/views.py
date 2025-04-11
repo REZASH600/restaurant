@@ -14,7 +14,7 @@ from apps.accounts import models
 from . import serializers, permissions
 import random
 from django.core.cache import cache
-from apps.accounts.tasks.send_email import send_verification_email
+from apps.accounts.tasks import send_email,send_sms
 
 
 class UserListApiView(generics.ListAPIView):
@@ -76,7 +76,7 @@ class SendEmailApiView(views.APIView):
         token = random.randint(100000, 999999)
         cache.set(f"verify_email:{request.user.id}", token, timeout=300)  # 5 minutes
 
-        send_verification_email.delay(temp_email, token)
+        send_email.send_verification_email.delay(temp_email, token)
         return response.Response(
             {"message": f"Verification token sent to {temp_email}"},
             status=status.HTTP_200_OK,
@@ -119,3 +119,57 @@ class VerifyEmailApiView(views.APIView):
 
 
 
+class SendPhoneOtpApiView(views.APIView):
+    permission_classes = [drf_permissions.IsAuthenticated]
+
+    def post(self, request):
+        phone = request.user.phone
+        if request.user.is_phone_verified:
+            return response.Response(
+                {"error": "Phone number is already verified."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        token = random.randint(100000, 999999)
+        cache.set(f"verify_phone:{request.user.id}", token, timeout=300)  # 5 minutes
+
+        send_sms.send_verification_sms.delay(phone, token)
+
+        return response.Response(
+            {"message": f"Verification code sent to {phone}"},
+            status=status.HTTP_200_OK,
+        )
+
+
+class VerifyPhoneOtpApiView(views.APIView):
+    serializer_class = serializers.VerifyTokenApiSerializer
+    permission_classes = [drf_permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        token = serializer.validated_data["token"]
+        cached_token = cache.get(f"verify_phone:{request.user.id}")
+
+        if not cached_token:
+            return response.Response(
+                {"error": "Token expired or not found."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if token != str(cached_token):
+            return response.Response(
+                {"error": "Invalid token."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        cache.delete(f"verify_phone:{request.user.id}")
+
+        request.user.is_phone_verified = True
+        request.user.save()
+
+        return response.Response(
+            {"message": "Phone number verified successfully."},
+            status=status.HTTP_200_OK,
+        )
