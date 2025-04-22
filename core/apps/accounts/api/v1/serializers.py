@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from apps.accounts import models
 from django.contrib.auth.password_validation import validate_password
+from django.urls import reverse
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -109,6 +110,27 @@ class ChangePassowrdSerializer(serializers.Serializer):
         return user
 
 
-
 class VerifyTokenApiSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=6)
+
+
+class CheckoutSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Checkout
+        fields = [
+            "id",
+            "address",
+            "city",
+            "state",
+            "postal_code",
+            "recipient_phone",
+            "recipient_name",
+            "is_default",
+        ]
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        validated_data["user_profile"] = request.user.profile
+        return super().create(validated_data)
+

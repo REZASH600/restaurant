@@ -14,7 +14,7 @@ from apps.accounts import models
 from . import serializers, permissions
 import random
 from django.core.cache import cache
-from apps.accounts.tasks import send_email,send_sms
+from apps.accounts.tasks import send_email, send_sms
 
 
 class UserListApiView(generics.ListAPIView):
@@ -117,8 +117,6 @@ class VerifyEmailApiView(views.APIView):
         return response.Response({"error": "No temporary email found."}, status=400)
 
 
-
-
 class SendPhoneOtpApiView(views.APIView):
     permission_classes = [drf_permissions.IsAuthenticated]
 
@@ -173,3 +171,33 @@ class VerifyPhoneOtpApiView(views.APIView):
             {"message": "Phone number verified successfully."},
             status=status.HTTP_200_OK,
         )
+
+
+class CheckoutListApiView(generics.ListAPIView):
+    queryset = models.Checkout.objects.all()
+    serializer_class = serializers.CheckoutSerializer
+    permission_classes = [drf_permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(user_profile=self.request.user.profile)
+
+
+class CheckoutUpdateApiView(generics.UpdateAPIView):
+    http_method_names = ["patch"]
+    queryset = models.Checkout.objects.all()
+    serializer_class = serializers.CheckoutSerializer
+    permission_classes = [permissions.IsOwnerOrAdminUser]
+
+    def check_object_permissions(self, request, obj):
+        """
+        Override to check if the user has permission based on their associated user profile.
+
+        """
+        obj = obj.user_profile
+        return super().check_object_permissions(request, obj)
+
+
+class CheckoutCreateApiView(generics.CreateAPIView):
+    serializer_class = serializers.CheckoutSerializer
+    permission_classes = [drf_permissions.IsAuthenticated]

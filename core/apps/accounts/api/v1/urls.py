@@ -13,7 +13,26 @@ urlpatterns = [
         name="change_password",
     ),
     path("verify-email/send/", views.SendEmailApiView.as_view(), name="send_email"),
-    path("verify-email/check/", views.VerifyEmailApiView.as_view(), name="verify_email"),
-    path("verify-phone/send/", views.SendPhoneOtpApiView.as_view(), name="send_phone_otp"),
-    path("verify-phone/check/", views.VerifyPhoneOtpApiView.as_view(), name="verify_phone_otp"),
+    path(
+        "verify-email/check/", views.VerifyEmailApiView.as_view(), name="verify_email"
+    ),
+    path(
+        "verify-phone/send/", views.SendPhoneOtpApiView.as_view(), name="send_phone_otp"
+    ),
+    path(
+        "verify-phone/check/",
+        views.VerifyPhoneOtpApiView.as_view(),
+        name="verify_phone_otp",
+    ),
+    path("checkouts/", views.CheckoutListApiView.as_view(), name="checkout_list"),
+    path(
+        "checkouts/<int:pk>/",
+        views.CheckoutUpdateApiView.as_view(),
+        name="checkout_update",
+    ),
+    path(
+        "checkouts/create/",
+        views.CheckoutCreateApiView.as_view(),
+        name="checkout_create",
+    ),
 ]
