@@ -3,7 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from utils import validations
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
-
+from django.core.cache import cache
+from django.db.models import Avg
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=255, verbose_name=_("name"))
@@ -94,6 +95,13 @@ class Restaurant(models.Model):
     
         now_time = now.time()
         return opening_hour.open_time <= now_time <= opening_hour.close_time
+
+
+    def get_cached_rate(self):
+        
+        key = f"restaurant_rating_{self.id}"
+        data = cache.get(key)
+        return round(data["avg"], 2) if data else self.rate
 
     def __str__(self):
         return f"{self.name}:{self.description}"
