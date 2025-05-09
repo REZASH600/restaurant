@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     # apps
     "apps.accounts.apps.AccountsConfig",
     "apps.branches.apps.BranchesConfig",
+    "apps.menus.apps.MenusConfig",
 ]
 
 MIDDLEWARE = [
