@@ -6,3 +6,7 @@ class MenusConfig(AppConfig):
     name = 'apps.menus'
     verbose_name = _('Menu')
     verbose_name_plural = _('Menus')
+
+
+    def ready(self):
+         from . import signals
