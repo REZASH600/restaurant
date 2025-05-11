@@ -59,7 +59,7 @@ services:
     volumes:
       - ./core:/app
     command: >
-      sh -c "celery -A config worker -l INFO -Q tasks"
+      sh -c "celery -A config worker -B -l INFO -Q tasks"
 
     env_file:
       - ./envs/local/web.env
