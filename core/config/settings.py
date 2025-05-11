@@ -7,6 +7,10 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# Celery Beat Schedule
+from config.celery_beat_schedule import CELERY_BEAT_SCHEDULE
+
+
 SECRET_KEY = config("SECRET_KEY", default="django")
 
 
@@ -156,7 +160,9 @@ CELERY_BROKER_URL = config(
     "CELERY_BROKER_URL", default="amqp://guest:guest@rabbitmq:5672/"
 )
 CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://redis:6379/0")
-
+CELERY_BEAT_SCHEDULE_FILENAME = path.join(
+    BASE_DIR, config("CELERY_BEAT_FILES_DIRECTORY"), config("CELERY_BEAT_FILES_NAME")
+)
 
 # Email configuration
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
