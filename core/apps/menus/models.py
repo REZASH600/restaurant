@@ -3,7 +3,10 @@ from django.utils.translation import gettext_lazy as _
 from apps.branches.models import Restaurant
 from apps.accounts.models import Profile
 from django.core.cache import cache
-from django.db.models import Avg
+
+
+
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255, verbose_name=_("category name"))
@@ -62,11 +65,10 @@ class MenuItems(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("updated at"))
 
     def get_cached_rate(self):
-        
+
         key = f"menu_item_rating_{self.id}"
         data = cache.get(key)
         return round(data["avg"], 2) if data else self.rate
-
 
     def __str__(self):
         return f"{self.restaurant}-{self.name}-{self.price}"
@@ -94,8 +96,6 @@ class MenuItemImages(models.Model):
         verbose_name_plural = _("Menu Item Images")
 
 
-
-
 class Reviews(models.Model):
     comment = models.TextField(verbose_name=_("review"))
     rate = models.DecimalField(
@@ -118,11 +118,8 @@ class Reviews(models.Model):
         related_name="reviews",
         on_delete=models.CASCADE,
         verbose_name=_("restaurant"),
-        
     )
-    is_published = models.BooleanField(
-        default=True, verbose_name=_("is published")
-    )
+    is_published = models.BooleanField(default=True, verbose_name=_("is published"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("created at"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("updated at"))
 
@@ -132,3 +129,34 @@ class Reviews(models.Model):
     class Meta:
         verbose_name = _("Review")
         verbose_name_plural = _("Reviews")
+
+
+class UserFavoriteMenuItems(models.Model):
+    user_profile = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        related_name="favorite_menu_items",
+        verbose_name=_("user profile"),
+    )
+    menu_item = models.ForeignKey(
+        MenuItems,
+        on_delete=models.CASCADE,
+        related_name="favorite_menu_items",
+        verbose_name=_("menu item"),
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("created at"))
+
+    class Meta:
+        unique_together = ("user_profile", "menu_item")
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["user_profile"]),
+            models.Index(fields=["menu_item"]),
+            models.Index(fields=["user_profile", "menu_item"]),
+        ]
+
+        verbose_name = _("User Favorite Menu Item")
+        verbose_name_plural = _("User Favorite Menu Items")
+
+    def __str__(self):
+        return f"{self.user_profile} likes {self.menu_item}"

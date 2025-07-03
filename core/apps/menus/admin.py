@@ -1,14 +1,14 @@
 from django.contrib import admin
-from .models import Category, MenuItems, MenuItemImages, Reviews
+from . import models
 
 
 class MenuItemsImagesInline(admin.TabularInline):
-    model = MenuItemImages
+    model = models.MenuItemImages
     extra = 1
     readonly_fields = ["created_at", "updated_at"]
 
 
-@admin.register(MenuItems)
+@admin.register(models.MenuItems)
 class MenuItemsAdmin(admin.ModelAdmin):
     list_display = (
         "name",
@@ -36,7 +36,7 @@ class MenuItemsAdmin(admin.ModelAdmin):
     get_categories.short_description = "Categories"
 
 
-@admin.register(Category)
+@admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "get_restaurants")
     search_fields = ("name", "description")
@@ -48,12 +48,12 @@ class CategoryAdmin(admin.ModelAdmin):
     get_restaurants.short_description = "Restaurants"
 
 
-@admin.register(MenuItemImages)
+@admin.register(models.MenuItemImages)
 class MenuItemImagesAdmin(admin.ModelAdmin):
     list_display = ("menu_item", "image_file", "created_at")
 
 
-@admin.register(Reviews)
+@admin.register(models.Reviews)
 class ReviewsAdmin(admin.ModelAdmin):
     list_display = ("menu_item", "user_profile", "rate", "short_comment", "created_at")
     search_fields = ("comment", "user_profile__user__username", "menu_item__name")
@@ -63,3 +63,12 @@ class ReviewsAdmin(admin.ModelAdmin):
         return obj.comment[:50] + "..." if len(obj.comment) > 50 else obj.comment
 
     short_comment.short_description = "Comment"
+
+
+@admin.register(models.UserFavoriteMenuItems)
+class UserFavoriteMenuItemsAdmin(admin.ModelAdmin):
+    list_display = ["user_profile", "menu_item"]
+    search_fields = ("user_profile__user__username", "menu_item__name")
+
+
+    
