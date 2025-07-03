@@ -6,13 +6,14 @@ app_name = "api_v1"
 
 urlpatterns = [
     path(
-        "favorite-menu-items/",
+        "favorite-items/",
         views.UserFavoriteMenuItemListCreateView.as_view(),
         name="user-favorite-menuitem-list-create",
     ),
     path(
-        "favorite-menu-items/<int:pk>/",
+        "favorite-items/<int:pk>/",
         views.UserFavoriteMenuItemDestroyView.as_view(),
         name="favorite-menuitem-delete",
     ),
+    path("",views.MenuItemListAPIView.as_view(),name="menuitem-list")
 ]
