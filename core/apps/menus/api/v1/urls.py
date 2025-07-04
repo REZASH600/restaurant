@@ -7,13 +7,21 @@ app_name = "api_v1"
 urlpatterns = [
     path(
         "favorite-items/",
-        views.UserFavoriteMenuItemListCreateView.as_view(),
-        name="user-favorite-menuitem-list-create",
+        views.UserFavoriteMenuItemListCreateApiView.as_view(),
+        name="user_favorite_menuitem_list_create",
     ),
     path(
         "favorite-items/<int:pk>/",
-        views.UserFavoriteMenuItemDestroyView.as_view(),
-        name="favorite-menuitem-delete",
+        views.UserFavoriteMenuItemDestroyApiView.as_view(),
+        name="favorite_menuitem_delete",
     ),
-    path("",views.MenuItemListAPIView.as_view(),name="menuitem-list")
+    path("", views.MenuItemListApiView.as_view(), name="menuitem_list"),
+    path(
+        "<int:pk>/",
+        views.MenuItemRetrieveUpdateDeleteApiView.as_view(),
+        name="menuitem_retrieve_update_delete",
+    ),
+    path("create/", views.MenuItemCreateApiView.as_view(), name="menuitem_create"),
+    path("create/images/",views.MenuItemImagesCreateApiView.as_view(),name="menuitem_images_create"
+    )
 ]
