@@ -1,7 +1,7 @@
 from django.contrib.postgres.search import TrigramSimilarity
 from django.db.models.functions import Greatest
 from django_filters import rest_framework as filters
-from apps.menus.models import MenuItems
+from apps.menus.models import MenuItems , Reviews
 
 
 class MenuItemFilter(filters.FilterSet):
@@ -48,3 +48,24 @@ class MenuItemFilter(filters.FilterSet):
             .filter(similarity__gt=0.3)
             .order_by("-similarity")
         )
+
+
+
+
+class ReviewFilter(filters.FilterSet):
+    rate = filters.RangeFilter()
+    menu_item = filters.NumberFilter(field_name="menu_item__id")
+    restaurant = filters.NumberFilter(field_name="restaurant__id")
+    created_at = filters.DateFromToRangeFilter()
+    is_published = filters.BooleanFilter()
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+
+        if self.request and not self.request.user.is_staff:
+            self.filters.pop('is_published', None)
+
+    class Meta:
+        model = Reviews
+        fields = ["rate", "menu_item", "restaurant", "created_at", "is_published"]
