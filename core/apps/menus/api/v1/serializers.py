@@ -1,10 +1,13 @@
 from rest_framework import serializers
 from apps.menus import models
+from apps.accounts.models import Profile
 
 
 class UserFavoriteMenuItemSerializer(serializers.ModelSerializer):
     menu_item = serializers.HyperlinkedRelatedField(
-        view_name="menus:api_v1:menuitem_retrieve_update_delete", read_only=True, lookup_field="pk"
+        view_name="menus:api_v1:menuitem_retrieve_update_delete",
+        read_only=True,
+        lookup_field="pk",
     )
 
     class Meta:
@@ -28,8 +31,6 @@ class MenuItemListSerializer(serializers.ModelSerializer):
         many=True, read_only=True, slug_field="name"
     )
 
-
-
     images = MenuItemImageSerializer(read_only=True, many=True)
 
     class Meta:
@@ -44,9 +45,7 @@ class MenuItemListSerializer(serializers.ModelSerializer):
             "images",
             "preparation_time",
             "rate",
-
         ]
-
 
 
 class CategorySlugOrPKRelatedField(serializers.PrimaryKeyRelatedField):
@@ -90,3 +89,55 @@ class MenuItemDetailSerializer(serializers.ModelSerializer):
     def get_current_rate(self, obj):
 
         return obj.get_cached_rate()
+
+
+class ReviewsAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Reviews
+        fields = "__all__"
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user_profile_data = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Reviews
+        fields = [
+            "id",
+            "menu_item",
+            "comment",
+            "rate",
+            "restaurant",
+            "is_published",
+            "user_profile_data",
+            "created_at",
+            "updated_at",
+        ]
+
+    def get_user_profile_data(self, obj):
+        profile = obj.user_profile
+        request = self.context.get("request")
+
+        return {
+            "id": profile.id,
+            "username": profile.user.username,
+            "first_name": profile.first_name,
+            "last_name": profile.last_name,
+            "profile_picture": request.build_absolute_uri(profile.profile_picture.url),
+        }
+
+    def create(self, validated_data):
+        """
+        Create a new Review instance with the provided data.
+        Automatically publish the review if the user is not admin/staff.
+        """
+        user = self.context.get("request").user
+
+        # Only auto-publish if the user is NOT staff AND NOT superuser
+        if not (user.is_staff or user.is_superuser):
+            validated_data["is_published"] = True
+
+
+        validated_data["user_profile"] = user.profile
+
+        return models.Reviews.objects.create(**validated_data)

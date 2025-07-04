@@ -22,6 +22,20 @@ urlpatterns = [
         name="menuitem_retrieve_update_delete",
     ),
     path("create/", views.MenuItemCreateApiView.as_view(), name="menuitem_create"),
-    path("create/images/",views.MenuItemImagesCreateApiView.as_view(),name="menuitem_images_create"
-    )
+    path(
+        "create/images/",
+        views.MenuItemImagesCreateApiView.as_view(),
+        name="menuitem_images_create",
+    ),
+    path(
+        "delete/images/<int:pk>/",
+        views.MenuItemImagesDestroyApiView.as_view(),
+        name="menuitem_images_delete",
+    ),
+    path(
+        "reviews/admin/<int:pk>/",
+        views.ReviewsAdminRetrieveUpdateDeleteApiView.as_view(),
+        name="reviews_admin_retrieve_update_delete",
+    ),
+    path("reviews/", views.ReviewsListAPIView.as_view(), name="reviews_list"),
 ]
