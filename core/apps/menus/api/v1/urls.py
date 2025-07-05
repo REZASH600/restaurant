@@ -23,12 +23,12 @@ urlpatterns = [
     ),
     path("create/", views.MenuItemCreateApiView.as_view(), name="menuitem_create"),
     path(
-        "create/images/",
+        "images/create/",
         views.MenuItemImagesCreateApiView.as_view(),
         name="menuitem_images_create",
     ),
     path(
-        "delete/images/<int:pk>/",
+        "images/delete/<int:pk>/",
         views.MenuItemImagesDestroyApiView.as_view(),
         name="menuitem_images_delete",
     ),
@@ -38,4 +38,7 @@ urlpatterns = [
         name="reviews_admin_retrieve_update_delete",
     ),
     path("reviews/", views.ReviewsListAPIView.as_view(), name="reviews_list"),
+    path(
+        "reveiws/create/", views.ReviewsCreateApiView.as_view(), name="reviews_create"
+    ),
 ]

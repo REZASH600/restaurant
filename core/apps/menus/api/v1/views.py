@@ -3,7 +3,7 @@ from apps.menus import models
 from . import serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from .filterset import MenuItemFilter, ReviewFilter
-
+from . import permissions
 
 class UserFavoriteMenuItemListCreateApiView(generics.ListCreateAPIView):
     serializer_class = serializers.UserFavoriteMenuItemSerializer
@@ -89,3 +89,12 @@ class ReviewsListAPIView(generics.ListAPIView):
         if not self.request.user.is_staff:
             qs = qs.filter(is_published=True)
         return qs
+
+
+class ReviewsCreateApiView(generics.CreateAPIView):
+    queryset = models.Reviews.objects.all()
+    serializer_class = serializers.ReviewSerializer
+    permission_classes = [
+        permissions.IsAdminOrMenuItemBuyer,
+    ]
+
