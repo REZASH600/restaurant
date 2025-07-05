@@ -2,7 +2,7 @@ from rest_framework import generics, permissions as drf_permissions
 from apps.menus import models
 from . import serializers
 from django_filters.rest_framework import DjangoFilterBackend
-from .filterset import MenuItemFilter, ReviewFilter
+from .filterset import MenuItemFilter, ReviewFilter, CategoryFilter
 from . import permissions
 
 class UserFavoriteMenuItemListCreateApiView(generics.ListCreateAPIView):
@@ -34,6 +34,10 @@ class MenuItemListApiView(generics.ListAPIView):
 
     filter_backends = [DjangoFilterBackend]
     filterset_class = MenuItemFilter
+
+
+    ordering_fields = ['created_at', 'updated_at']
+    ordering = ['-created_at'] 
 
 
 class MenuItemRetrieveUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
@@ -86,7 +90,8 @@ class ReviewsListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         qs = models.Reviews.objects.all()
-        if not self.request.user.is_staff:
+        user = self.request.user
+        if not (user.is_staff or user.is_superuser) :
             qs = qs.filter(is_published=True)
         return qs
 
@@ -97,4 +102,31 @@ class ReviewsCreateApiView(generics.CreateAPIView):
     permission_classes = [
         permissions.IsAdminOrMenuItemBuyer,
     ]
+
+
+
+class CategoryAdminRetrieveUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
+    http_method_names = ["patch", "get", "delete"]
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
+    permission_classes = [
+        drf_permissions.IsAdminUser,
+    ]
+
+
+class CategoryListApiView(generics.ListAPIView):
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CategoryFilter
+
+    ordering_fields = ['created_at', 'updated_at']
+    ordering = ['-created_at'] 
+   
+
+
+
+    
+
+
 

@@ -41,4 +41,10 @@ urlpatterns = [
     path(
         "reveiws/create/", views.ReviewsCreateApiView.as_view(), name="reviews_create"
     ),
+    path(
+        "category/admin/<int:pk>/",
+        views.CategoryAdminRetrieveUpdateDeleteApiView.as_view(),
+        name="category_admin_retrieve_update_delete",
+    ),
+    path("category/list/", views.CategoryListApiView.as_view(), name="category_list"),
 ]

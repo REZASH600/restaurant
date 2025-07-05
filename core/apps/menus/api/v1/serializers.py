@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apps.menus import models
-from apps.accounts.models import Profile
+from django.urls import reverse
 
 
 class UserFavoriteMenuItemSerializer(serializers.ModelSerializer):
@@ -137,7 +137,28 @@ class ReviewSerializer(serializers.ModelSerializer):
         if not (user.is_staff or user.is_superuser):
             validated_data["is_published"] = True
 
-
         validated_data["user_profile"] = user.profile
 
         return models.Reviews.objects.create(**validated_data)
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    menu_item_list_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Category
+        fields = [
+            "id",
+            "name",
+            "description",
+            "image_file",
+            "restaurant",
+            "menu_item_list_url",
+            "created_at",
+            "updated_at",
+        ]
+
+    def get_menu_item_list_url(self, obj):
+        base_url = reverse("menus:api_v1:menuitem_list")
+        return f"{base_url}?category_id={obj.id}"
