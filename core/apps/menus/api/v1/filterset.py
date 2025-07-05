@@ -13,6 +13,7 @@ class MenuItemFilter(filters.FilterSet):
     is_available = filters.BooleanFilter(field_name="is_available")
 
     category = filters.CharFilter(field_name="category__name", lookup_expr="icontains")
+    category_id = filters.NumberFilter(field_name="category__id")
 
     preparation_time = filters.NumericRangeFilter(field_name="preparation_time")
     
@@ -31,6 +32,7 @@ class MenuItemFilter(filters.FilterSet):
             "price",
             "is_available",
             "category",
+            "category_id",
             "preparation_time",
             "rate",
             "created_at",
@@ -69,3 +71,32 @@ class ReviewFilter(filters.FilterSet):
     class Meta:
         model = Reviews
         fields = ["rate", "menu_item", "restaurant", "created_at", "is_published"]
+
+
+
+
+class CategoryFilter(filters.FilterSet):
+
+    search = filters.CharFilter(method="filter_search")
+    created_at = filters.DateFromToRangeFilter(field_name="created_at")
+    updated_at = filters.DateFromToRangeFilter(field_name="updated_at")
+
+
+    class Meta:
+        model = MenuItems
+        fields = [
+            "search",
+            "created_at",
+            "updated_at",
+        ]
+
+    
+    def filter_search(self, queryset, name, value):
+        return (
+            queryset.annotate(
+                sim_name=TrigramSimilarity("name", value),
+                sim_desc=TrigramSimilarity("description", value),
+            )
+            .filter(similarity__gt=0.3)
+            .order_by("-similarity")
+        )
