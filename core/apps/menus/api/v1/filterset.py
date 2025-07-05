@@ -1,7 +1,7 @@
 from django.contrib.postgres.search import TrigramSimilarity
 from django.db.models.functions import Greatest
 from django_filters import rest_framework as filters
-from apps.menus.models import MenuItems , Reviews
+from apps.menus.models import MenuItems, Reviews, Category
 
 
 class MenuItemFilter(filters.FilterSet):
@@ -16,7 +16,7 @@ class MenuItemFilter(filters.FilterSet):
     category_id = filters.NumberFilter(field_name="category__id")
 
     preparation_time = filters.NumericRangeFilter(field_name="preparation_time")
-    
+
     rate = filters.NumericRangeFilter(
         field_name="rate",
         help_text="Filter menu items with rating between 1 and 5",
@@ -52,8 +52,6 @@ class MenuItemFilter(filters.FilterSet):
         )
 
 
-
-
 class ReviewFilter(filters.FilterSet):
     rate = filters.RangeFilter()
     menu_item = filters.NumberFilter(field_name="menu_item__id")
@@ -62,35 +60,33 @@ class ReviewFilter(filters.FilterSet):
     is_published = filters.BooleanFilter()
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
+        self.request = kwargs.pop("request", None)
         super().__init__(*args, **kwargs)
 
         if self.request and not self.request.user.is_staff:
-            self.filters.pop('is_published', None)
+            self.filters.pop("is_published", None)
 
     class Meta:
         model = Reviews
         fields = ["rate", "menu_item", "restaurant", "created_at", "is_published"]
 
 
-
-
 class CategoryFilter(filters.FilterSet):
 
     search = filters.CharFilter(method="filter_search")
+    category_id = filters.NumberFilter(field_name="id")
     created_at = filters.DateFromToRangeFilter(field_name="created_at")
     updated_at = filters.DateFromToRangeFilter(field_name="updated_at")
 
-
     class Meta:
-        model = MenuItems
+        model = Category
         fields = [
             "search",
+            "category_id",
             "created_at",
             "updated_at",
         ]
 
-    
     def filter_search(self, queryset, name, value):
         return (
             queryset.annotate(
