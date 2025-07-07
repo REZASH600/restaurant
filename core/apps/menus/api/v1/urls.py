@@ -18,8 +18,14 @@ urlpatterns = [
     path("", views.MenuItemListApiView.as_view(), name="menuitem_list"),
     path(
         "<int:pk>/",
-        views.MenuItemRetrieveUpdateDeleteApiView.as_view(),
-        name="menuitem_retrieve_update_delete",
+        views.MenuItemRetrieveApiView.as_view(),
+        name="menuitem_retrieve",
+    ),
+
+    path(
+        "edit/<int:pk>/",
+        views.MenuItemUpdateDeleteApiView.as_view(),
+        name="menuitem_update_delete",
     ),
     path("create/", views.MenuItemCreateApiView.as_view(), name="menuitem_create"),
     path(

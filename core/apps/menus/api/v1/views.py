@@ -4,6 +4,7 @@ from . import serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from .filterset import MenuItemFilter, ReviewFilter, CategoryFilter
 from . import permissions
+from utils.permissions import IsAdminOrIsPersonnel
 
 class UserFavoriteMenuItemListCreateApiView(generics.ListCreateAPIView):
     serializer_class = serializers.UserFavoriteMenuItemSerializer
@@ -40,17 +41,25 @@ class MenuItemListApiView(generics.ListAPIView):
     ordering = ['-created_at'] 
 
 
-class MenuItemRetrieveUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
-    http_method_names = ["patch", "get", "delete"]
+class MenuItemRetrieveApiView(generics.RetrieveAPIView):
     queryset = models.MenuItems.objects.all()
     serializer_class = serializers.MenuItemDetailSerializer
+
+class MenuItemUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
+    http_method_names = ["patch", "delete"]
+    queryset = models.MenuItems.objects.all()
+    serializer_class = serializers.MenuItemDetailSerializer
+    permission_classes = [
+        IsAdminOrIsPersonnel,
+    ]
+
 
 
 class MenuItemCreateApiView(generics.CreateAPIView):
     queryset = models.MenuItems.objects.all()
     serializer_class = serializers.MenuItemDetailSerializer
     permission_classes = [
-        drf_permissions.IsAdminUser,
+        IsAdminOrIsPersonnel,
     ]
 
 
@@ -58,14 +67,14 @@ class MenuItemImagesCreateApiView(generics.CreateAPIView):
     queryset = models.MenuItemImages.objects.all()
     serializer_class = serializers.MenuItemImageSerializer
     permission_classes = [
-        drf_permissions.IsAdminUser,
+        IsAdminOrIsPersonnel,
     ]
 
 
 class MenuItemImagesDestroyApiView(generics.DestroyAPIView):
     queryset = models.MenuItemImages.objects.all()
     permission_classes = [
-        drf_permissions.IsAdminUser,
+       IsAdminOrIsPersonnel,
     ]
 
 
@@ -74,7 +83,7 @@ class ReviewsAdminRetrieveUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIV
     queryset = models.MenuItems.objects.all()
     serializer_class = serializers.ReviewsAdminSerializer
     permission_classes = [
-        drf_permissions.IsAdminUser,
+        IsAdminOrIsPersonnel,
     ]
 
 
@@ -100,7 +109,7 @@ class ReviewsCreateApiView(generics.CreateAPIView):
     queryset = models.Reviews.objects.all()
     serializer_class = serializers.ReviewSerializer
     permission_classes = [
-        permissions.IsAdminOrMenuItemBuyer,
+        permissions.IsSuperuserOrIsPersonelOrBuyer,
     ]
 
 
@@ -110,7 +119,7 @@ class CategoryAdminRetrieveUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPI
     queryset = models.Category.objects.all()
     serializer_class = serializers.CategorySerializer
     permission_classes = [
-        drf_permissions.IsAdminUser,
+        IsAdminOrIsPersonnel,
     ]
 
 
