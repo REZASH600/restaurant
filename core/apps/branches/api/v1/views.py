@@ -3,7 +3,7 @@ from apps.branches import models
 from . import serializers
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-
+from utils.permissions import IsAdminOrIsPersonnel
 
 class RestaurantListApiView(generics.ListAPIView):
     queryset = models.Restaurant.objects.all()
@@ -22,7 +22,7 @@ class RestaurantUpdateApiView(generics.UpdateAPIView):
     queryset = models.Restaurant.objects.all()
     serializer_class = serializers.RestaurantDetailSerializer
     permission_classes = [
-        drf_permissions.IsAdminUser,
+        IsAdminOrIsPersonnel,
     ]
 
 
@@ -31,13 +31,13 @@ class RestaurantRetrieveApiView(generics.RetrieveAPIView):
     serializer_class = serializers.RestaurantDetailSerializer
 
 
-class RestaurantOpeningHoursCreateAPIView(generics.CreateAPIView):
+class RestaurantOpeningHoursCreateApiView(generics.CreateAPIView):
     queryset = models.RestaurantOpeningHours.objects.all()
     serializer_class = serializers.RestaurantOpeningHoursSerializer
-    permission_classes = [drf_permissions.IsAdminUser]
+    permission_classes = [IsAdminOrIsPersonnel]
 
 
-class RestaurantOpeningHoursListAPIView(generics.ListAPIView):
+class RestaurantOpeningHoursListApiView(generics.ListAPIView):
     queryset = models.RestaurantOpeningHours.objects.all()
     serializer_class = serializers.RestaurantOpeningHoursSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
@@ -45,8 +45,8 @@ class RestaurantOpeningHoursListAPIView(generics.ListAPIView):
     ordering_fields = ["restaurant", "day", "open_time", "close_time"]
 
 
-class RestaurantOpeningHoursUpdateAPIView(generics.UpdateAPIView):
+class RestaurantOpeningHoursUpdateApiView(generics.UpdateAPIView):
     http_method_names = ["patch"]
     queryset = models.RestaurantOpeningHours.objects.all()
     serializer_class = serializers.RestaurantOpeningHoursSerializer
-    permission_classes = [drf_permissions.IsAdminUser]
+    permission_classes = [IsAdminOrIsPersonnel]

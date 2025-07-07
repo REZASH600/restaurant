@@ -16,17 +16,17 @@ urlpatterns = [
     ),
     path(
         "opening-hours/create/",
-        views.RestaurantOpeningHoursCreateAPIView.as_view(),
+        views.RestaurantOpeningHoursCreateApiView.as_view(),
         name="opening_hours_create",
     ),
     path(
         "opening-hours/",
-        views.RestaurantOpeningHoursListAPIView.as_view(),
+        views.RestaurantOpeningHoursListApiView.as_view(),
         name="opening_hours_list",
     ),
     path(
         "opening-hours/<int:pk>/update/",
-        views.RestaurantOpeningHoursUpdateAPIView.as_view(),
+        views.RestaurantOpeningHoursUpdateApiView.as_view(),
         name="opening_hours_update",
     ),
 ]
