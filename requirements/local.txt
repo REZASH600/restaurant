@@ -1,4 +1,7 @@
 -r base.txt
 
+
+pytest==8.3.5
+pytest-django==4.10.0
 django-factory_boy==1.0.0
 Faker==37.4.0
