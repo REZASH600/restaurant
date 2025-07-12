@@ -19,6 +19,15 @@ make l-build
 
 This command will build and start all necessary containers, including the Django application and PostgreSQL database.
 
+## Enabling pg_trgm Extension for PostgreSQL
+
+The project uses PostgreSQL's `pg_trgm` extension for fuzzy search functionality. To enable this extension inside the PostgreSQL container, run the following command:
+
+```bash
+pg_trgm-enable
+
+```
+
 
 ## Accessing the Application
 Once the containers are up and running, you can access the application at:

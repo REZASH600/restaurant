@@ -7,6 +7,9 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# Celery Beat Schedule
+from config.celery_beat_schedule import CELERY_BEAT_SCHEDULE
+
 
 SECRET_KEY = config("SECRET_KEY", default="django")
 
@@ -30,9 +33,10 @@ INSTALLED_APPS = [
     "django_filters",
     "django_cleanup.apps.CleanupConfig",
     "drf_spectacular",
-
     # apps
     "apps.accounts.apps.AccountsConfig",
+    "apps.branches.apps.BranchesConfig",
+    "apps.menus.apps.MenusConfig",
 ]
 
 MIDDLEWARE = [
@@ -125,6 +129,8 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
 }
 
 
@@ -139,13 +145,45 @@ SPECTACULAR_SETTINGS = {
 # JWT
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=6),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7)
-    }
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+}
 
 
-# accounts model settings
+# accounts model
 AUTH_USER_MODEL = "accounts.MyUser"
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "apps.accounts.authentication.EmailOrPhoneAuthentication",
 ]
+
+
+# Celery
+CELERY_BROKER_URL = config(
+    "CELERY_BROKER_URL", default="amqp://guest:guest@rabbitmq:5672/"
+)
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://redis:6379/0")
+CELERY_BEAT_SCHEDULE_FILENAME = path.join(
+    BASE_DIR, config("CELERY_BEAT_FILES_DIRECTORY"), config("CELERY_BEAT_FILES_NAME")
+)
+
+# Email configuration
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = config("EMAIL_HOST", default="smtp4dev")
+EMAIL_PORT = config("EMAIL_PORT", default=25, cast=int)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False, cast=bool)
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False, cast=bool)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="")
+
+
+# Caches
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": config("REDIS_URL", default="redis://redis:6379/1"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}

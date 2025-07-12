@@ -15,3 +15,6 @@ l-logs:
 
 web-shell:
 	docker exec -it web bash
+
+pg_trgm-enable:
+	docker exec -it db psql -U postgres -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"

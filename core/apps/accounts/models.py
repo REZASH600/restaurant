@@ -5,7 +5,7 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.utils.translation import gettext_lazy as _
-from . import validations
+from utils import validations
 
 
 class MyUserManager(BaseUserManager):
@@ -162,30 +162,30 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 class Profile(models.Model):
     user = models.OneToOneField(
         MyUser,
-        verbose_name=_("user"),
         on_delete=models.CASCADE,
         related_name=_("profile"),
+        verbose_name=_("user"),
     )
     first_name = models.CharField(
-        verbose_name=_("first name"), max_length=255, blank=True, null=True
+        max_length=255, blank=True, null=True, verbose_name=_("first name")
     )
     last_name = models.CharField(
-        verbose_name=_("last name"), max_length=255, blank=True, null=True
+        max_length=255, blank=True, null=True, verbose_name=_("last name")
     )
     profile_picture = models.ImageField(
-        verbose_name=_("profile picture"),
         upload_to="user/profile/",
         default="user/profile/user.png",
+        verbose_name=_("profile picture"),
     )
 
-    reviews_count = models.IntegerField(verbose_name=_("reviews count"), default=0)
-    orders_count = models.IntegerField(verbose_name=_("orders count"), default=0)
+    reviews_count = models.IntegerField(default=0, verbose_name=_("reviews count"))
+    orders_count = models.IntegerField(default=0, verbose_name=_("orders count"))
     temporary_email = models.EmailField(
-        verbose_name=_("temporary email"), max_length=255, blank=True, null=True
+        max_length=255, blank=True, null=True, verbose_name=_("temporary email")
     )
 
-    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
-    updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("created at"))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("updated at"))
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.user.phone})"
@@ -198,21 +198,25 @@ class Profile(models.Model):
 class Checkout(models.Model):
 
     user_profile = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name="checkouts"
+        Profile,
+        on_delete=models.CASCADE,
+        related_name="checkouts",
+        verbose_name=_("user profile"),
     )
     address = models.TextField(verbose_name=_("address"))
-    city = models.CharField(verbose_name=_("city"), max_length=100)
-    state = models.CharField(verbose_name=_("state"), max_length=100)
+    city = models.CharField(max_length=100, verbose_name=_("city"))
+    state = models.CharField(max_length=100, verbose_name=_("state"))
     postal_code = models.CharField(
-        verbose_name=_("postal code"),
-        max_length=20,
+        max_length=10,
+        unique=True,
         validators=[validations.custom_postal_code_validator],
+        verbose_name=_("postal code"),
     )
-    recipient_phone = models.CharField(verbose_name=_("recipient phone"), max_length=15)
-    recipient_name = models.CharField(verbose_name=_("recipient name"), max_length=100)
-    is_default = models.BooleanField(verbose_name=_("is default"), default=False)
-    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
-    updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
+    recipient_phone = models.CharField(max_length=15, verbose_name=_("recipient phone"))
+    recipient_name = models.CharField(max_length=100, verbose_name=_("recipient name"))
+    is_default = models.BooleanField(default=False, verbose_name=_("is default"))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("created at"))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("updated at"))
 
     def __str__(self):
         return f"Checkout for {self.recipient_name} - {self.address}"

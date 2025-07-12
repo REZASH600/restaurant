@@ -34,8 +34,62 @@ services:
       - envs/local/postgres.env
 
 
+  redis:
+    container_name: "redis"
+    image: "redis"
+    restart: always
+
+  rabbitmq:
+     container_name: "rabbitmq"
+     image: "rabbitmq:management"
+     restart: always
+     ports:
+       - '5672:5672'
+       - '15672:15672'
+
+  
+  celery:
+    container_name: celery
+    image: celery
+    build:
+      context: .
+      dockerfile: ./docker/local/Dockerfile
+
+    restart: always
+    volumes:
+      - ./core:/app
+    command: >
+      sh -c "celery -A config worker -B -l INFO -Q tasks"
+
+    env_file:
+      - ./envs/local/web.env
+      - ./envs/local/postgres.env  
+
+    depends_on:
+      - redis
+      - rabbitmq
+      - web 
+
+  
+  smtp4dev:
+    container_name: smtp4dev
+    image: rnwood/smtp4dev:v3
+    restart: always
+    ports:
+      # Change the number before : to the port the web interface should be accessible on
+      - '5000:80'
+      # Change the number before : to the port the SMTP server should be accessible on
+      - '25:25'
+      # Change the number before : to the port the IMAP server should be accessible on
+      - '143:143'
+    volumes:
+      # This is where smtp4dev stores the database..
+        - smtp4dev-data:/smtp4dev
+
+
 
 volumes:
   static_volume:
   media_volume:
   local_postgres_data:
+  smtp4dev-data:
