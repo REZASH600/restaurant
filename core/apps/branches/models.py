@@ -33,8 +33,7 @@ class Restaurant(models.Model):
         unique=True,
         null=True,
         blank=True,
-        validators=[validations.validate_phone],
-        verbose_name=_("phone number2"),
+        verbose_name=_("phone number2 (mobile or landline)"),
     )
 
     email = models.EmailField(
