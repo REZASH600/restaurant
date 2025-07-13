@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.core.cache import cache
 from django.db.models import Avg
 
+
 class Restaurant(models.Model):
     name = models.CharField(max_length=255, verbose_name=_("name"))
     description = models.TextField(verbose_name=_("description"))
@@ -86,18 +87,19 @@ class Restaurant(models.Model):
     def is_open_now(self):
         now = timezone.localtime()
         current_day = now.weekday()
-        
-        opening_hour = self.opening_hours.filter(day=current_day, is_closed=False).first()
-        
+
+        opening_hour = self.opening_hours.filter(
+            day=current_day, is_closed=False
+        ).first()
+
         if not opening_hour:
             return False
-    
+
         now_time = now.time()
         return opening_hour.open_time <= now_time <= opening_hour.close_time
 
-
     def get_cached_rate(self):
-        
+
         key = f"restaurant_rating_{self.id}"
         data = cache.get(key)
         return round(data["avg"], 2) if data else self.rate
@@ -131,18 +133,11 @@ class RestaurantOpeningHours(models.Model):
         choices=WeekDays.choices, verbose_name=_("Day of the Week")
     )
 
-    open_time = models.TimeField(verbose_name=_("Opening Time"))
+    open_time = models.TimeField(verbose_name=_("Opening Time"), null=True, blank=True)
 
-    close_time = models.TimeField(verbose_name=_("Closing Time"))
+    close_time = models.TimeField(verbose_name=_("Closing Time"), null=True, blank=True)
 
     is_closed = models.BooleanField(default=False, verbose_name=_("Closed on this day"))
-
-    class Meta:
-        unique_together = ("restaurant", "day")
-        verbose_name = _("Restaurant Opening Hour")
-        verbose_name_plural = _("Restaurant Opening Hours")
-        ordering = ["restaurant", "day"]
-    
 
     def __str__(self):
         day_name = self.get_day_display()
@@ -151,8 +146,8 @@ class RestaurantOpeningHours(models.Model):
             return f"{restaurant_name} - {day_name} - Closed"
         return f"{restaurant_name} - {day_name} | {self.open_time.strftime('%H:%M')} to {self.close_time.strftime('%H:%M')}"
 
-
     class Meta:
+        unique_together = ("restaurant", "day")
         verbose_name = _("Restaurant Opening Hour")
         verbose_name_plural = _("Restaurant Opening Hours")
         ordering = ["restaurant", "day"]
