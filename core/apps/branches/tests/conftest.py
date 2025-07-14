@@ -4,12 +4,9 @@ from apps.branches.tests.factories import (
     RestaurantOpeningHoursFactory,
 )
 from datetime import time
-from apps.branches.models import RestaurantOpeningHours
 
 
-@pytest.fixture
-def restaurant():
-    return RestaurantFactory()
+
 
 
 @pytest.fixture

@@ -20,15 +20,6 @@ def super_user():
 
 
 @pytest.fixture
-def fake_user():
-    return UserFactory()
-
-
-@pytest.fixture
-def fake_profile(fake_user):
-    return ProfileFactory(user=fake_user)
-
-@pytest.fixture
 def default_checkout(fake_profile):
     return CheckoutFactory(user_profile=fake_profile, is_default=True)
 
