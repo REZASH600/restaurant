@@ -1,0 +1,1 @@
+from tests.accounts.fixtures.checkout import *

@@ -1,22 +1,7 @@
+
 import pytest
-from apps.branches.tests.factories import (
-    RestaurantFactory,
-    RestaurantOpeningHoursFactory,
-)
-from datetime import time
+from tests.branches.factories import RestaurantOpeningHoursFactory
 
-
-
-
-
-@pytest.fixture
-def restaurant_without_optional():
-    return RestaurantFactory(without_optional_fields=True)
-
-
-@pytest.fixture
-def static_restaurant():
-    return RestaurantFactory(static_test_values=True)
 
 
 @pytest.fixture
@@ -44,9 +29,3 @@ def opening_hour_saturday_noon(restaurant):
 def closed_hours(restaurant):
     return RestaurantOpeningHoursFactory(restaurant=restaurant, closed=True)
 
-@pytest.fixture
-def all_days_open_hours(restaurant):
-    return [
-        RestaurantOpeningHoursFactory(restaurant=restaurant, day=day, is_closed=False, open_time=time(9, 0), close_time=time(17, 0))
-        for day in range(7)
-    ]

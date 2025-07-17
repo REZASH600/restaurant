@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch
-from apps.menus.tests.factories import ReviewsFactory
+from tests.menus.factories import ReviewsFactory
 
 @pytest.mark.django_db
 class TestReviewsModel:

@@ -15,6 +15,7 @@ def fake_farsi_phone_number():
 class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = MyUser
+        skip_postgeneration_save = True
 
     phone = factory.LazyFunction(fake_farsi_phone_number)
     username = factory.LazyAttribute(lambda x: faker.user_name())
