@@ -45,8 +45,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
-    password1 = serializers.CharField(max_length=128)
-    password2 = serializers.CharField(max_length=128)
+    password1 = serializers.CharField(max_length=128, write_only=True)
+    password2 = serializers.CharField(max_length=128, write_only=True)
 
     class Meta:
         model = models.MyUser
@@ -133,4 +133,3 @@ class CheckoutSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         validated_data["user_profile"] = request.user.profile
         return super().create(validated_data)
-
