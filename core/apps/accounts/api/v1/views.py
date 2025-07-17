@@ -174,7 +174,7 @@ class VerifyPhoneOtpApiView(views.APIView):
 
 
 class CheckoutListApiView(generics.ListAPIView):
-    queryset = models.Checkout.objects.all()
+    queryset = models.Checkout.objects.all().order_by("id")
     serializer_class = serializers.CheckoutSerializer
     permission_classes = [drf_permissions.IsAuthenticated]
 
