@@ -1,6 +1,6 @@
 import pytest
 from tests.menus.factories import ReviewsFactory
-from tests.menus.fixtures.menu import menu_item_with_relations
+
 
 
 @pytest.fixture

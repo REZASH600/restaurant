@@ -1,7 +1,7 @@
 import pytest
 
 from tests.accounts.factories import ProfileFactory
-from tests.fixtures.user import fake_user
+
 
 
 @pytest.fixture

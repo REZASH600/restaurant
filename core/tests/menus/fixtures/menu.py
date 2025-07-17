@@ -1,6 +1,6 @@
 import pytest
 from tests.menus.factories import MenuItemsFactory, MenuItemImagesFactory
-from tests.menus.fixtures.category import multiple_categories
+
 
 
 @pytest.fixture
