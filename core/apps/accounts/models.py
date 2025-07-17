@@ -163,7 +163,7 @@ class Profile(models.Model):
     user = models.OneToOneField(
         MyUser,
         on_delete=models.CASCADE,
-        related_name=_("profile"),
+        related_name="profile",
         verbose_name=_("user"),
     )
     first_name = models.CharField(
