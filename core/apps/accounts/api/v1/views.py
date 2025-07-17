@@ -18,7 +18,7 @@ from apps.accounts.tasks import send_email, send_sms
 
 
 class UserListApiView(generics.ListAPIView):
-    queryset = models.MyUser.objects.all()
+    queryset = models.MyUser.objects.all().order_by("id")
     serializer_class = serializers.UserListSerializer
     permission_classes = (drf_permissions.IsAdminUser,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
