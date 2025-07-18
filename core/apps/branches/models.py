@@ -4,7 +4,7 @@ from utils import validations
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from django.core.cache import cache
-from django.db.models import Avg
+from decimal import Decimal
 
 
 class Restaurant(models.Model):
@@ -48,8 +48,8 @@ class Restaurant(models.Model):
     rate = models.DecimalField(
         max_digits=3,
         decimal_places=2,
-        validators=[MinValueValidator(0.0), MaxValueValidator(5.0)],
-        default=0.0,
+        validators=[MinValueValidator(Decimal("0.0")), MaxValueValidator(Decimal("5.0"))],
+        default=Decimal("0.0"),
         verbose_name=_("rate"),
     )
 
@@ -67,7 +67,7 @@ class Restaurant(models.Model):
     out_of_range_delivery_fee = models.DecimalField(
         max_digits=6,
         decimal_places=2,
-        validators=[MinValueValidator(0)],
+        validators=[MinValueValidator(Decimal("0.0"))],
         default=0,
         verbose_name=_("out of range delivery fee"),
     )
@@ -75,7 +75,7 @@ class Restaurant(models.Model):
     max_out_of_range_distance = models.DecimalField(
         max_digits=5,
         decimal_places=2,
-        validators=[MinValueValidator(0)],
+        validators=[MinValueValidator(Decimal("0.0"))],
         default=0,
         verbose_name=_("max out of range distance (km)"),
     )
