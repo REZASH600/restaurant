@@ -109,7 +109,7 @@ class ReviewsCreateApiView(generics.CreateAPIView):
     queryset = models.Reviews.objects.all()
     serializer_class = serializers.ReviewSerializer
     permission_classes = [
-        permissions.IsSuperuserOrIsPersonelOrBuyer,
+        permissions.IsAdminOrIsPersonelOrBuyer,
     ]
 
 

@@ -13,8 +13,8 @@ def api_client():
     return APIClient()
 
 @pytest.fixture
-def auth_client(super_user):
+def admin_client(admin_user):
     client = APIClient()
-    token = AccessToken.for_user(super_user)
+    token = AccessToken.for_user(admin_user)
     client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(token)}")
     return client

@@ -1,7 +1,7 @@
 from utils.permissions import IsAdminOrIsPersonnel
 
 
-class IsSuperuserOrIsPersonelOrBuyer(IsAdminOrIsPersonnel):
+class IsAdminOrIsPersonelOrBuyer(IsAdminOrIsPersonnel):
     """
     Custom permission to allow access only to:
     - admin users (staff or superuser), or

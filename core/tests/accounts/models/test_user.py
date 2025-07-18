@@ -17,14 +17,14 @@ class TestMyUserModel:
         assert inactive_user.is_active is False
         assert inactive_user.is_staff is False
 
-    def test_create_staff_user(self, staff_user):
-        assert staff_user.is_staff is True
-        assert staff_user.is_superuser is False
+    def test_create_personnel_user(self, personnel_user):
+        assert personnel_user.is_staff is False
+        assert  personnel_user.is_superuser is True
 
-    def test_create_superuser(self, super_user):
-        assert super_user.is_superuser is True
-        assert super_user.is_staff is True
-        assert super_user.is_active is True
+    def test_create_admin(self, admin_user):
+        assert admin_user.is_superuser is True
+        assert admin_user.is_staff is True
+        assert admin_user.is_active is True
 
     def test_password_is_hashed(self, normal_user):
         assert normal_user.password != "Reza.sh1382"
@@ -55,9 +55,9 @@ class TestMyUserModel:
                 phone="09123456789", username="reza", password=None
             )
 
-    def test_create_superuser_with_wrong_flags_raises(self):
+    def test_create_admin_with_wrong_flags_raises(self):
         with pytest.raises(ValueError):
-            MyUser.objects.create_superuser(
+            MyUser.objects.create_admin(
                 phone="09123456789",
                 username="admin",
                 password="Reza.sh1382",

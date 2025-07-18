@@ -26,8 +26,8 @@ class UserFactory(factory.django.DjangoModelFactory):
     class Params:
         normal = factory.Trait(is_active=True, is_staff=False, is_superuser=False)
         not_active = factory.Trait(is_active=False, is_staff=False, is_superuser=False)
-        staff = factory.Trait(is_active=True, is_staff=True, is_superuser=False)
-        superuser = factory.Trait(is_active=True, is_staff=True, is_superuser=True)
+        personnel = factory.Trait(is_active=True, is_staff=False, is_superuser=True)
+        admin = factory.Trait(is_active=True, is_staff=True, is_superuser=True)
 
 
 class ProfileFactory(factory.django.DjangoModelFactory):

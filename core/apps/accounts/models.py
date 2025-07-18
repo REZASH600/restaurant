@@ -86,7 +86,7 @@ class MyUserManager(BaseUserManager):
 
         return self.create_user(phone, username, password, **extra_fields)
 
-    def create_superuser(self, phone, username, password, **extra_fields):
+    def create_admin(self, phone, username, password, **extra_fields):
         """
         Creates and returns a manager user with the specified phone, username, and password.
 

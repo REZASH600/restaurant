@@ -15,9 +15,9 @@ def inactive_user():
     return UserFactory(not_active=True)
 
 @pytest.fixture
-def staff_user():
-    return UserFactory(staff=True)
+def personnel_user():
+    return UserFactory(personnel=True)
 
 @pytest.fixture
-def super_user():
-    return UserFactory(superuser=True)
+def admin_user():
+    return UserFactory(admin=True)
