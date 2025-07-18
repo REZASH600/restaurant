@@ -5,8 +5,9 @@ from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from utils.permissions import IsAdminOrIsPersonnel
 
+
 class RestaurantListApiView(generics.ListAPIView):
-    queryset = models.Restaurant.objects.all()
+    queryset = models.Restaurant.objects.all().order_by("id")
     serializer_class = serializers.RestaurantListSerializer
 
 
