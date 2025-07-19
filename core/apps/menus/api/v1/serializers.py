@@ -4,16 +4,22 @@ from django.urls import reverse
 
 
 class UserFavoriteMenuItemSerializer(serializers.ModelSerializer):
-    menu_item = serializers.HyperlinkedRelatedField(
-        view_name="menus:api_v1:menuitem_retrieve_update_delete",
+    menu_item_link = serializers.HyperlinkedRelatedField(
+        view_name="menus:api_v1:menuitem_retrieve",
         read_only=True,
+        source="menu_item",
         lookup_field="pk",
     )
 
     class Meta:
         model = models.UserFavoriteMenuItems
-        fields = ["id", "menu_item", "created_at"]
+        fields = ["id", "menu_item", "created_at", "menu_item_link"]
         read_only_fields = ["created_at"]
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+        validated_data["user_profile"] = user.profile
+        return super().create(validated_data)
 
 
 class MenuItemImageSerializer(serializers.ModelSerializer):

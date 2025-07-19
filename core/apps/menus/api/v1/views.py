@@ -15,8 +15,6 @@ class UserFavoriteMenuItemListCreateApiView(generics.ListCreateAPIView):
             user_profile=self.request.user.profile
         )
 
-    def perform_create(self, serializer):
-        serializer.save(user_profile=self.request.user.profile)
 
 
 class UserFavoriteMenuItemDestroyApiView(generics.DestroyAPIView):
