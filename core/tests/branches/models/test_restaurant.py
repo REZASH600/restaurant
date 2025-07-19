@@ -2,7 +2,7 @@
 
 import pytest
 from decimal import Decimal
-
+from django.core.cache import cache
 
 @pytest.mark.django_db
 class TestRestaurantModel:
@@ -18,6 +18,8 @@ class TestRestaurantModel:
         assert -180 <= restaurant.longitude <= 180
 
     def test_get_cached_rate_returns_default_if_not_cached(self, restaurant):
+        key = f"restaurant_rating_{restaurant.id}"
+        cache.delete(key) 
         assert restaurant.get_cached_rate() == restaurant.rate
 
     def test_support_of_range_delivery_default_true(self, static_restaurant):
