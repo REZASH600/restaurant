@@ -3,9 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from apps.branches.models import Restaurant
 from apps.accounts.models import Profile
 from django.core.cache import cache
-
-
-
+from django.core.validators import MinValueValidator, MaxValueValidator
+from decimal import Decimal
 
 
 class Category(models.Model):
@@ -44,8 +43,16 @@ class MenuItems(models.Model):
         default=0, verbose_name=_("preparation time (minutes)")
     )
     rate = models.DecimalField(
-        max_digits=3, decimal_places=2, default=0.00, verbose_name=_("rate")
+        max_digits=3,
+        decimal_places=2,
+        validators=[
+            MinValueValidator(Decimal("0.0")),
+            MaxValueValidator(Decimal("5.0")),
+        ],
+        default=Decimal("0.0"),
+        verbose_name=_("rate"),
     )
+
     stock_quantity = models.IntegerField(default=0, verbose_name=_("stock quantity"))
 
     category = models.ManyToManyField(
@@ -99,7 +106,14 @@ class MenuItemImages(models.Model):
 class Reviews(models.Model):
     comment = models.TextField(verbose_name=_("review"))
     rate = models.DecimalField(
-        max_digits=3, decimal_places=2, default=0.00, verbose_name=_("rate")
+        max_digits=3,
+        decimal_places=2,
+        validators=[
+            MinValueValidator(Decimal("0.0")),
+            MaxValueValidator(Decimal("5.0")),
+        ],
+        default=Decimal("0.0"),
+        verbose_name=_("rate"),
     )
     user_profile = models.ForeignKey(
         Profile,
