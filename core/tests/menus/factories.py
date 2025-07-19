@@ -1,6 +1,7 @@
 from faker import Faker
 import factory
 from apps.menus import models
+from tests.accounts.factories import ProfileFactory
 
 faker = Faker("fa_IR")
 
@@ -85,3 +86,14 @@ class ReviewsFactory(factory.django.DjangoModelFactory):
         )
     )
     is_published = True
+
+
+
+
+class UserFavoriteMenuItemsFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.UserFavoriteMenuItems
+        django_get_or_create = ("user_profile", "menu_item")
+
+    user_profile = factory.SubFactory(ProfileFactory)
+    menu_item = factory.SubFactory(MenuItemsFactory)
