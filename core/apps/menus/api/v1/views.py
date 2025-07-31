@@ -6,6 +6,7 @@ from .filterset import MenuItemFilter, ReviewFilter, CategoryFilter
 from . import permissions
 from utils.permissions import IsAdminOrIsPersonnel
 
+
 class UserFavoriteMenuItemListCreateApiView(generics.ListCreateAPIView):
     serializer_class = serializers.UserFavoriteMenuItemSerializer
     permission_classes = [drf_permissions.IsAuthenticated]
@@ -14,7 +15,6 @@ class UserFavoriteMenuItemListCreateApiView(generics.ListCreateAPIView):
         return models.UserFavoriteMenuItems.objects.filter(
             user_profile=self.request.user.profile
         )
-
 
 
 class UserFavoriteMenuItemDestroyApiView(generics.DestroyAPIView):
@@ -34,14 +34,14 @@ class MenuItemListApiView(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend]
     filterset_class = MenuItemFilter
 
-
-    ordering_fields = ['created_at', 'updated_at']
-    ordering = ['-created_at'] 
+    ordering_fields = ["created_at", "updated_at"]
+    ordering = ["-created_at"]
 
 
 class MenuItemRetrieveApiView(generics.RetrieveAPIView):
     queryset = models.MenuItems.objects.all()
     serializer_class = serializers.MenuItemDetailSerializer
+
 
 class MenuItemUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
     http_method_names = ["patch", "delete"]
@@ -50,7 +50,6 @@ class MenuItemUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [
         IsAdminOrIsPersonnel,
     ]
-
 
 
 class MenuItemCreateApiView(generics.CreateAPIView):
@@ -72,7 +71,7 @@ class MenuItemImagesCreateApiView(generics.CreateAPIView):
 class MenuItemImagesDestroyApiView(generics.DestroyAPIView):
     queryset = models.MenuItemImages.objects.all()
     permission_classes = [
-       IsAdminOrIsPersonnel,
+        IsAdminOrIsPersonnel,
     ]
 
 
@@ -98,7 +97,7 @@ class ReviewsListAPIView(generics.ListAPIView):
     def get_queryset(self):
         qs = models.Reviews.objects.all().order_by("id")
         user = self.request.user
-        if not (user.is_staff or user.is_superuser) :
+        if not (user.is_staff or user.is_superuser):
             qs = qs.filter(is_published=True)
         return qs
 
@@ -107,7 +106,6 @@ class ReviewsCreateApiView(generics.CreateAPIView):
     queryset = models.Reviews.objects.all()
     serializer_class = serializers.ReviewSerializer
     permission_classes = [drf_permissions.IsAuthenticated]
-
 
 
 class CategoryAdminRetrieveUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
@@ -120,18 +118,10 @@ class CategoryAdminRetrieveUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPI
 
 
 class CategoryListApiView(generics.ListAPIView):
-    queryset = models.Category.objects.all()
+    queryset = models.Category.objects.all().order_by("id")
     serializer_class = serializers.CategorySerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = CategoryFilter
 
-    ordering_fields = ['created_at', 'updated_at']
-    ordering = ['-created_at'] 
-   
-
-
-
-    
-
-
-
+    ordering_fields = ["created_at", "updated_at"]
+    ordering = ["-created_at"]

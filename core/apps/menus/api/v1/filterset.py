@@ -92,6 +92,7 @@ class CategoryFilter(filters.FilterSet):
             queryset.annotate(
                 sim_name=TrigramSimilarity("name", value),
                 sim_desc=TrigramSimilarity("description", value),
+                similarity=Greatest("sim_name", "sim_desc"),
             )
             .filter(similarity__gt=0.3)
             .order_by("-similarity")
