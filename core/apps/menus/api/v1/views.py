@@ -96,7 +96,7 @@ class ReviewsListAPIView(generics.ListAPIView):
         return kwargs
 
     def get_queryset(self):
-        qs = models.Reviews.objects.all()
+        qs = models.Reviews.objects.all().order_by("id")
         user = self.request.user
         if not (user.is_staff or user.is_superuser) :
             qs = qs.filter(is_published=True)
