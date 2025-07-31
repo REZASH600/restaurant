@@ -27,9 +27,9 @@ class TestReviewSerializers:
         assert "user_profile_data" in data
         assert data["user_profile_data"]["id"] == review.user_profile.id
 
-    def test_review_create_auto_publish(self, fake_profile, menu_item_with_relations,rf):
+    def test_review_create_auto_publish(self, normal_user_profile, menu_item_with_relations,rf):
         request = rf.post("/")
-        request.user = fake_profile.user
+        request.user = normal_user_profile.user
         context = {"request": request}
 
         data = {
@@ -45,4 +45,4 @@ class TestReviewSerializers:
 
         assert review_instance.comment == data["comment"]
         assert review_instance.is_published is True
-        assert review_instance.user_profile == fake_profile
+        assert review_instance.user_profile == normal_user_profile

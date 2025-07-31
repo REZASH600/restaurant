@@ -20,28 +20,28 @@ class TestUserFavoriteMenuItemSerializer:
         assert "created_at" in data
 
     def test_create_user_favorite_menu_item(
-        self, fake_profile, menu_item_with_relations
+        self, normal_user_profile, menu_item_with_relations
     ):
         data = {"menu_item": menu_item_with_relations.id}
 
         serializer = UserFavoriteMenuItemSerializer(
             data=data,
-            context={"request": type("Req", (), {"user": fake_profile.user})()},
+            context={"request": type("Req", (), {"user": normal_user_profile.user})()},
         )
         assert serializer.is_valid(), serializer.errors
         instance = serializer.save()
 
         assert instance.menu_item == menu_item_with_relations
-        assert instance.user_profile == fake_profile
+        assert instance.user_profile == normal_user_profile
 
     def test_duplicate_favorite_should_fail(
-        self, user_favorite_menu_item, fake_profile
+        self, user_favorite_menu_item, normal_user_profile
     ):
         data = {"menu_item": user_favorite_menu_item.menu_item.id}
 
         serializer = UserFavoriteMenuItemSerializer(
             data=data,
-            context={"request": type("Req", (), {"user": fake_profile.user})()},
+            context={"request": type("Req", (), {"user": normal_user_profile.user})()},
         )
 
         is_valid = serializer.is_valid()

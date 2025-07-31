@@ -25,9 +25,9 @@ class TestUserFavoriteMenuItemViews:
         )
 
     def test_user_can_create_favorite(
-        self, api_client, fake_profile, menu_item_with_relations
+        self, api_client, normal_user_profile, menu_item_with_relations
     ):
-        user = fake_profile.user
+        user = normal_user_profile.user
         token = AccessToken.for_user(user)
         api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(token)}")
 
@@ -37,7 +37,7 @@ class TestUserFavoriteMenuItemViews:
 
         assert response.status_code == status.HTTP_201_CREATED
         assert models.UserFavoriteMenuItems.objects.filter(
-            user_profile=fake_profile, menu_item=menu_item_with_relations
+            user_profile=normal_user_profile, menu_item=menu_item_with_relations
         ).exists()
 
     def test_user_can_delete_own_favorite(self, api_client, user_favorite_menu_item):

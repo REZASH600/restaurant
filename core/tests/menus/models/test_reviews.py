@@ -23,9 +23,9 @@ class TestReviewsModel:
 
     @patch("apps.menus.signals.update_menu_item_cache")
     @patch("apps.menus.signals.update_restaurant_cache")
-    def test_post_save_signal_triggers_cache_updates(self, mock_restaurant_cache, mock_menu_cache, fake_profile, menu_item_with_relations):
+    def test_post_save_signal_triggers_cache_updates(self, mock_restaurant_cache, mock_menu_cache, normal_user_profile, menu_item_with_relations):
         review = ReviewsFactory(
-            user_profile=fake_profile,
+            user_profile=normal_user_profile,
             menu_item=menu_item_with_relations,
             restaurant=menu_item_with_relations.restaurant.first(),
             rate=4.0,

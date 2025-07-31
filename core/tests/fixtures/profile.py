@@ -5,5 +5,11 @@ from tests.accounts.factories import ProfileFactory
 
 
 @pytest.fixture
-def fake_profile(fake_user):
-    return ProfileFactory(user=fake_user)
+def normal_user_profile(normal_user):
+    return ProfileFactory(user=normal_user)
+
+
+
+@pytest.fixture
+def admin_user_profile(admin_user):
+    return ProfileFactory(user=admin_user)

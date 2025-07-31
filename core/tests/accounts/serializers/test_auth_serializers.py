@@ -9,9 +9,9 @@ from apps.accounts.api.v1.serializers import (
 @pytest.mark.django_db
 class TestChangePasswordSerializer:
 
-    def test_valid_change_password(self, fake_user):
-        fake_user.set_password("OldPass123!")
-        fake_user.save()
+    def test_valid_change_password(self, normal_user):
+        normal_user.set_password("OldPass123!")
+        normal_user.save()
 
         data = {
             "old_password": "OldPass123!",
@@ -19,15 +19,15 @@ class TestChangePasswordSerializer:
             "password2": "NewPass123!",
         }
         serializer = ChangePassowrdSerializer(
-            data=data, context={"request": type("Req", (), {"user": fake_user})()}
+            data=data, context={"request": type("Req", (), {"user": normal_user})()}
         )
         assert serializer.is_valid(), serializer.errors
         user = serializer.save()
         assert user.check_password(data["password1"])
 
-    def test_wrong_old_password(self, fake_user):
-        fake_user.set_password("OldPass123!")
-        fake_user.save()
+    def test_wrong_old_password(self, normal_user):
+        normal_user.set_password("OldPass123!")
+        normal_user.save()
 
         data = {
             "old_password": "WrongOldPass!",
@@ -35,14 +35,14 @@ class TestChangePasswordSerializer:
             "password2": "NewPass123!",
         }
         serializer = ChangePassowrdSerializer(
-            data=data, context={"request": type("Req", (), {"user": fake_user})()}
+            data=data, context={"request": type("Req", (), {"user": normal_user})()}
         )
         assert not serializer.is_valid()
         assert "old_password" in serializer.errors
 
-    def test_password_mismatch(self, fake_user):
-        fake_user.set_password("OldPass123!")
-        fake_user.save()
+    def test_password_mismatch(self, normal_user):
+        normal_user.set_password("OldPass123!")
+        normal_user.save()
 
         data = {
             "old_password": "OldPass123!",
@@ -50,7 +50,7 @@ class TestChangePasswordSerializer:
             "password2": "DifferentPass123!",
         }
         serializer = ChangePassowrdSerializer(
-            data=data, context={"request": type("Req", (), {"user": fake_user})()}
+            data=data, context={"request": type("Req", (), {"user": normal_user})()}
         )
         assert not serializer.is_valid()
         assert "password2" in serializer.errors
@@ -80,7 +80,7 @@ class TestCheckoutSerializer:
         for field in CheckoutSerializer.Meta.fields:
             assert field in data
 
-    def test_create_checkout_assigns_user_profile(self, fake_profile):
+    def test_create_checkout_assigns_user_profile(self, normal_user_profile):
         data = {
             "address": "123 Main St",
             "city": "Tehran",
@@ -92,10 +92,10 @@ class TestCheckoutSerializer:
         }
 
         class FakeRequest:
-            user = type("User", (), {"profile": fake_profile})()
+            user = type("User", (), {"profile": normal_user_profile})()
 
         serializer = CheckoutSerializer(data=data, context={"request": FakeRequest()})
         assert serializer.is_valid(), serializer.errors
         instance = serializer.save()
-        assert instance.user_profile == fake_profile
+        assert instance.user_profile == normal_user_profile
         assert instance.address == data["address"]
