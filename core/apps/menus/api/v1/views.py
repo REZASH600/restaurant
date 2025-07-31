@@ -28,7 +28,7 @@ class UserFavoriteMenuItemDestroyApiView(generics.DestroyAPIView):
 
 
 class MenuItemListApiView(generics.ListAPIView):
-    queryset = models.MenuItems.objects.all()
+    queryset = models.MenuItems.objects.all().order_by("id")
     serializer_class = serializers.MenuItemListSerializer
 
     filter_backends = [DjangoFilterBackend]
