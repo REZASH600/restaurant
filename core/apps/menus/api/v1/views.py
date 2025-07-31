@@ -78,7 +78,7 @@ class MenuItemImagesDestroyApiView(generics.DestroyAPIView):
 
 class ReviewsAdminRetrieveUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
     http_method_names = ["patch", "get", "delete"]
-    queryset = models.MenuItems.objects.all()
+    queryset = models.Reviews.objects.all()
     serializer_class = serializers.ReviewsAdminSerializer
     permission_classes = [
         IsAdminOrIsPersonnel,
@@ -106,9 +106,7 @@ class ReviewsListAPIView(generics.ListAPIView):
 class ReviewsCreateApiView(generics.CreateAPIView):
     queryset = models.Reviews.objects.all()
     serializer_class = serializers.ReviewSerializer
-    permission_classes = [
-        permissions.IsAdminOrIsPersonelOrBuyer,
-    ]
+    permission_classes = [drf_permissions.IsAuthenticated]
 
 
 

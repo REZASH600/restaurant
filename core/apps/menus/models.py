@@ -104,7 +104,7 @@ class MenuItemImages(models.Model):
 
 
 class Reviews(models.Model):
-    comment = models.TextField(verbose_name=_("review"))
+    comment = models.TextField(verbose_name=_("comment"))
     rate = models.DecimalField(
         max_digits=3,
         decimal_places=2,
